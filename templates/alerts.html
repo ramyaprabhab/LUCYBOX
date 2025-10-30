@@ -1,0 +1,14 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1>Alerts</h1>
+<table class="table table-sm table-striped">
+<thead><tr><th>ID</th><th>EventID</th><th>Status</th><th>Tags</th><th>Notes</th><th>TS</th></tr></thead>
+<tbody>
+{% for a in alerts %}
+<tr><td>{{ a.id }}</td><td>{{ a.event_id }}</td><td>{{ a.status }}</td><td>{{ a.tags }}</td><td>{{ a.notes }}</td><td>{{ a.created_at }}</td></tr>
+<tr><td colspan="6"><pre>{{ a.event.raw_json }}</pre></td></tr>
+{% else %}<tr><td colspan="6">No alerts</td></tr>{% endfor %}
+</tbody>
+</table>
+{% endblock %}

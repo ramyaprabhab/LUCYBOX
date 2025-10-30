@@ -1,0 +1,39 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="row mb-4">
+  <div class="col-md-8">
+    <h5>Events over time</h5>
+    <canvas id="timeseries" height="100"></canvas>
+  </div>
+  <div class="col-md-4">
+    <h5>Top talkers</h5>
+    <canvas id="talkers" height="200"></canvas>
+  </div>
+</div>
+<h2>Recent events</h2>
+<table class='table table-sm table-striped'>
+  <thead><tr><th>ID</th><th>TS</th><th>Source</th><th>Severity</th><th>Type</th><th>Sig</th></tr></thead>
+  <tbody>
+  {% for e in events %}
+    <tr><td>{{ e.id }}</td><td>{{ e.ts }}</td><td>{{ e.source }}</td><td>{{ e.severity }}</td><td>{{ e.event_type }}</td><td>{{ e.signature }}</td></tr>
+    <tr><td colspan="6"><pre>{{ e.raw_json }}</pre></td></tr>
+  {% else %}
+    <tr><td colspan='6'>No events yet</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<script>
+const buckets = {{ buckets | tojson }};
+const top = {{ top | tojson }};
+const labels = buckets.map(b => b.bucket);
+const counts = buckets.map(b => b.count);
+const ctx = document.getElementById('timeseries').getContext('2d');
+new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Events', data: counts, fill:false }] }, options: { responsive:true } });
+const talkers_labels = top.map(t => t.src_ip || '(unknown)');
+const talkers_counts = top.map(t => t.cnt);
+const ctx2 = document.getElementById('talkers').getContext('2d');
+new Chart(ctx2, { type: 'bar', data: { labels: talkers_labels, datasets: [{ label:'Events', data: talkers_counts }] }, options: { responsive:true } });
+</script>
+{% endblock %}

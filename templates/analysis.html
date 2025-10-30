@@ -1,0 +1,31 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1>Analysis</h1>
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h5>Top talkers</h5>
+    <ul>{% for t in top %}<li>{{ t.src_ip }} — {{ t.cnt }}</li>{% else %}<li>No data</li>{% endfor %}</ul>
+  </div>
+  <div class="col-md-6">
+    <h5>Protocol distribution</h5>
+    <canvas id="prot" height="200"></canvas>
+  </div>
+</div>
+<div class="mb-4">
+  <h5>Events over time (last 24h)</h5>
+  <canvas id="timeseries" height="100"></canvas>
+</div>
+<script>
+const proto = {{ proto_rows | tojson }};
+const labels = proto.map(p => p.signature || '(none)');
+const data = proto.map(p => p.cnt);
+const ctx = document.getElementById('prot').getContext('2d');
+new Chart(ctx, {type:'pie', data:{labels:labels, datasets:[{data:data}]}});
+const buckets = {{ buckets | tojson }};
+const b_labels = buckets.map(b => b.bucket);
+const b_counts = buckets.map(b => b.count);
+const ctx2 = document.getElementById('timeseries').getContext('2d');
+new Chart(ctx2, {type:'line', data:{labels:b_labels, datasets:[{label:'Events', data:b_counts, fill:false}]}});
+</script>
+{% endblock %}

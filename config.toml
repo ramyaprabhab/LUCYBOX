@@ -1,0 +1,12 @@
+
+[server]
+host = "127.0.0.1"
+port = 5000
+debug = true
+
+[storage]
+db_path = "events.db"
+retention_days = 30
+
+[admin]
+token = "changeme"

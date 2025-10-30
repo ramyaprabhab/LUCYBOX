@@ -1,0 +1,21 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1>Admin Console</h1>
+<div class="mb-3">
+  <a class="btn btn-primary" href="/admin/import?token={{ request.args.get('token','') }}">Import Logs</a>
+</div>
+<div class="mt-3">
+  <form method="post" action="/admin/purge" class="mt-2">
+    <input name="days" class="form-control" style="width:120px;display:inline-block" value="30">
+    <button class="btn btn-warning">Purge</button>
+  </form>
+</div>
+{% if get_flashed_messages() %}
+  <div class="mt-3">
+    {% for m in get_flashed_messages() %}
+      <div class="alert alert-info">{{ m }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}
